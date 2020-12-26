@@ -1,0 +1,33 @@
+class Solution:
+    def nextPermutation(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        if len(nums) == 1:
+            return
+        # 记录是否存在下一个更大的排列
+        begin = len(nums) - 1
+        for i in range(len(nums) - 2, -1, -1):
+            if nums[i] < nums[i+1]:
+                # 第一种情况：最后两个数颠倒位置
+                if i == len(nums) - 2:
+                    nums[i], nums[i + 1] = nums[i + 1], nums[i]
+                    return
+                # 第二种情况：排序后找到可以替换当前位置的数字
+                else:
+                    self.reverse(nums, begin)
+                    j = bisect.bisect(nums, nums[begin - 1], lo=begin)
+                    nums[i], nums[j] = nums[j], nums[i]
+                    return
+            else:
+                begin = i
+        if begin == 0:
+            self.reverse(nums)
+
+    def reverse(self, nums, begin=0):
+        length = len(nums) - 1
+        while begin < length:
+            nums[begin], nums[length] = nums[length], nums[begin]
+            begin += 1
+            length -= 1
+
